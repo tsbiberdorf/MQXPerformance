@@ -103,4 +103,60 @@
 */
 //#define SERVER_ADDR     0xC00002CC
 
+/* code copied in from the http sample operation
+ */
+/* IP address macros */
+#define A 192
+#define B 168
+#define C 1
+#define D 202
+
+#ifndef ENET_IPMASK
+    #define ENET_IPMASK  IPADDR(255,255,255,0) 
+#endif
+
+#define DEMOCFG_USE_WIFI  0  /* USE WIFI Interface */
+
+#if DEMOCFG_USE_WIFI
+   
+   #define DEMOCFG_SSID            "NGZG"
+   //Possible Values managed or adhoc
+   #define DEMOCFG_NW_MODE         "managed" 
+   //Possible vales 
+   // 1. "wep"
+   // 2. "wpa"
+   // 3. "wpa2"
+   // 4. "none"
+   #define DEMOCFG_SECURITY        "none"
+   #define DEMOCFG_PASSPHRASE      NULL
+   #define DEMOCFG_WEP_KEY         "ABCDE"
+   //Possible values 1,2,3,4
+   #define DEMOCFG_WEP_KEY_INDEX   1
+   #define DEMOCFG_DEFAULT_DEVICE  1
+#endif
+
+#ifndef DEMOCFG_DEFAULT_DEVICE
+   #define DEMOCFG_DEFAULT_DEVICE   BSP_DEFAULT_ENET_DEVICE
+#endif
+
+
+#if RTCSCFG_ENABLE_IP6   
+    #if RTCSCFG_ENABLE_IP4   
+        /* 
+        **  HTTP_INET_AF is AF_INET+AF_INET for http support IPv4+IPv6.
+        **  HTTP_INET_AF is AF_INET  for http support IPv4 only.
+        **  HTTP_INET_AF is AF_INET6 for http support IPv6 only.
+        */
+        #define HTTP_INET_AF    AF_INET6+AF_INET 
+    #else
+        #define HTTP_INET_AF    AF_INET6        
+    #endif
+#else
+        #define HTTP_INET_AF    AF_INET         
+#endif
+    
+    //#define HTTP_INET_AF           AF_INET
+    #define HTTP_SCOPE_ID          0 /* For any IF. */
+
+
 /* EOF */
