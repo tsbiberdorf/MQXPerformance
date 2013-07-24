@@ -1,152 +1,114 @@
 /**HEADER********************************************************************
- *
- * Copyright (c) 2008 Freescale Semiconductor;
- * All Rights Reserved
- *
- * Copyright (c) 1989-2008 ARC International;
- * All Rights Reserved
- *
- ***************************************************************************
- *
- * THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESSED OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL FREESCALE OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
- *
- **************************************************************************
- *
- * $FileName: snmptraps.c$
- * $Version : 3.8.23.0$
- * $Date    : Oct-2-2012$
- *
- * Comments:
- *
- *   Example showing how to use SNMP traps
- *
- *END************************************************************************/
+* 
+* Copyright (c) 2008 Freescale Semiconductor;
+* All Rights Reserved                       
+*
+* Copyright (c) 1989-2008 ARC International;
+* All Rights Reserved
+*
+*************************************************************************** 
+*
+* THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESSED OR 
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  
+* IN NO EVENT SHALL FREESCALE OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) 
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+**************************************************************************
+*
+* $FileName: httpdsrv.c$
+* $Version : 3.8.6.0$
+* $Date    : Oct-10-2012$
+*
+* Comments:
+*
+*   Example HTTP server using RTCS Library.
+*
+*END************************************************************************/
 
 #include <mqx.h>
 #include <bsp.h>
 #include <rtcs.h>
-#include <snmpcfg.h>
-#include <snmp.h>
 #include <ipcfg.h>
 
 #include "httpd.h"
-#include "httpServer.h"
 #include "tfs.h"
 #include "cgi.h"
 #include "enet_wifi.h"
+#include "config.h"
 #include "ioDriver.h"
 
 #include <select.h>
 #include <shell.h>
 #include <sh_rtcs.h>
-
-#include "config.h"
-#include "snmp_demo.h"
 #include "shellTask.h"
 
-#ifdef ENET_DEVICE
-#include <enet.h>
+#if DEMOCFG_USE_WIFI
+#include "iwcfg.h"
+#include "string.h"
 #endif
-#ifdef PPP_DEVICE
-#include <ppp.h>
+
+#define HTTPD_SEPARATE_TASK     0
+#define DEBUG__MESSAGES         0
+#define SHELL_TASK              2
+
+
+#ifndef BSP_DEFAULT_IO_CHANNEL_DEFINED
+#error This application requires BSP_DEFAULT_IO_CHANNEL to be not NULL. Please set corresponding BSPCFG_ENABLE_TTYx to non-zero in user_config.h and recompile BSP with this option.
 #endif
+
 #ifndef MQX_DEVICE
 #define MQX_DEVICE BSP_DEFAULT_IO_CHANNEL
 #endif
 
-#if ! RTCSCFG_ENABLE_IP4
-#error This application requires RTCSCFG_ENABLE_IP4 defined non-zero in user_config.h. Please recompile BSP with this option.
+#ifndef BSP_ENET_DEVICE_COUNT
+#error Ethernet devices not defined!
 #endif
 
-#if ! RTCSCFG_ENABLE_SNMP
-#error This application requires RTCSCFG_ENABLE_SNMP defined non-zero in user_config.h. Please recompile BSP with this option.
+#if BSP_ENET_DEVICE_COUNT == 0
+#error No ethernet devices defined!
 #endif
+/* add SHELL */
 
-#if ! MQX_HAS_TIME_SLICE
-#error This application requires MQX_HAS_TIME_SLICE defined non-zero in user_config.h. Please recompile BSP with this option.
-#endif
-void Main_task (uint_32);
+/**/
 
-#ifdef ENET_DEVICE
-_enet_address enet_local  = ENET_ENETADDR;
-_ip_address   enet_ipaddr = ENET_IPADDR;
-_ip_address   enet_ipmask = ENET_IPMASK;
-#endif
-
-#ifdef PPP_DEVICE
-LWSEM_STRUCT ppp_sem;
-static void PPP_linkup (pointer lwsem) {_lwsem_post(lwsem);}
-#endif
-
-_ip_address  my_trap_list[] = {ENET_TRAP_ADDR1, ENET_TRAP_ADDR2,
-		ENET_TRAP_ADDR3, ENET_TRAP_ADDR4,0 };
+void main_task(uint_32 );
 
 /*
- ** MQX initialization information
- */
+** MQX initialization information
+*/
 
-extern void MIBdemo_init(void);
-extern void ADC_Task(uint_32 initial_data);
-
-const TASK_TEMPLATE_STRUCT  MQX_template_list[] =
+const TASK_TEMPLATE_STRUCT  MQX_template_list[] = 
 {
-		/* Task Index,   Function,   Stack,  Priority,   Name,     Attributes,          Param, Time Slice */
-		{ 1,            Main_task,  6000,   7,        "Main",     MQX_AUTO_START_TASK, 0,     0 },
-		{ 2,			ADC_Task,   1000,   8,        "ADC",     	MQX_AUTO_START_TASK,	0,  0},
-	    { 4,   			shell_task, 2000,   10,        "Shell_task", MQX_AUTO_START_TASK, 	0,	0 },
-		{ 0 }
+   /* Task Index,   Function,   Stack,  Priority,   Name,    Attributes,          Param, Time Slice */
+    { 1,            main_task,  2500,   8,          "Main",         MQX_AUTO_START_TASK, 0,     0 },
+    { SHELL_TASK,   shell_task, 2000,   9,          "Shell_task",   0, 0,     0 },
+    { 0 }
 };
 
-MQX_INITIALIZATION_STRUCT  MQX_init_struct =
-{
-		/* PROCESSOR_NUMBER                */  BSP_DEFAULT_PROCESSOR_NUMBER,
-		/* START_OF_KERNEL_MEMORY          */  BSP_DEFAULT_START_OF_KERNEL_MEMORY,
-		/* END_OF_KERNEL_MEMORY            */  BSP_DEFAULT_END_OF_KERNEL_MEMORY,
-		/* INTERRUPT_STACK_SIZE            */  BSP_DEFAULT_INTERRUPT_STACK_SIZE,
-		/* TASK_TEMPLATE_LIST              */  (pointer)MQX_template_list,
-		/* MQX_HARDWARE_INTERRUPT_LEVEL_MAX*/  BSP_DEFAULT_MQX_HARDWARE_INTERRUPT_LEVEL_MAX,
-		/* MAX_BUFFER_POOLS                */  BSP_DEFAULT_MAX_MSGPOOLS,
-		/* MAX_QUEUE_NUMBER                */  BSP_DEFAULT_MAX_MSGQS,
-		/* IO_CHANNEL                      */  MQX_DEVICE,
-		/* IO_OPEN_MODE                    */  BSP_DEFAULT_IO_OPEN_MODE
-};
-
-const HTTPD_ROOT_DIR_STRUCT root_dir[] = 
-{
+const HTTPD_ROOT_DIR_STRUCT root_dir[] = {
     { "", "tfs:" },
     { 0, 0 }
 };
 
+#define SES_MAX     4
 
 /*TASK*-----------------------------------------------------------------
- *
- * Function Name  : Main_task
- * Returned Value : void
- * Comments       : Application should be the lowest priority. Where lower
- *                  the number, higher the priority.
- *                  priority sequence should be: RTCS_TASK highest,
- *                  SNMP_TASK mid and application low.
- *
- *END------------------------------------------------------------------*/
-
-void Main_task(uint_32 temp)
-{
-#include <ipcfg.h>
-
+*
+* Function Name  : main_task
+* Returned Value : void
+* Comments       :
+*
+*END------------------------------------------------------------------*/
+void main_task(uint_32 temp) {
     int_32            error;
     uint_32 ipByte;
-	_rtcs_if_handle   ihandle;
-	_ip_address       new_target;
 
     HTTPD_STRUCT                        *server[BSP_ENET_DEVICE_COUNT];
     extern const HTTPD_CGI_LINK_STRUCT  cgi_lnk_tbl[];
@@ -158,13 +120,18 @@ void Main_task(uint_32 temp)
     uint_32                             i = 0;
     char*                               indexes[BSP_ENET_DEVICE_COUNT];
     uint_8 								n_devices = BSP_ENET_DEVICE_COUNT;
+#if  DEMOCFG_USE_WIFI   
+    ENET_ESSID                          ssid;
+    uint_32                             mode;// = DEMOCFG_NW_MODE;
+    uint_32                             sectype;// = DEMOCFG_SECURITY;
+    ENET_MEDIACTL_PARAM                 param;
+#endif
 #if RTCSCFG_ENABLE_IP6      
     IPCFG6_GET_ADDR_DATA    data[RTCSCFG_IP6_IF_ADDRESSES_MAX];
     char prn_addr6[sizeof "ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"];
     uint_32 n = 0;
     uint_32 j = 0;
 #endif
-
     _int_install_unexpected_isr();
     /*---------------- Initialize devices and variables ----------------------*/
     _RTCSPCB_init = 4;
@@ -269,7 +236,8 @@ void Main_task(uint_32 temp)
        
         indexes[i] = (char*) _mem_alloc(sizeof("\\index_x.html"));
     }  
-    
+   
+    error = _io_tfs_install("tfs:", tfs_data);
  
 #if DEBUG__MESSAGES 
     printf("Preparing http servers...\n");
@@ -343,135 +311,20 @@ void Main_task(uint_32 temp)
 #endif
     }
 
-#if ENABLE_SNMP_SAMPLE_CODE
-	/*
-	 ** Install some MIBs for the SNMP agent
-	 ** MIB1213_init must be called before SNMP_init functions
-	 ** It should not be removed.
-	 ** If application wishes to use MQX RTOS, MIBMQX_init must be called
-	 ** before SNMP_init functions.
-	 */
-	MIB1213_init();
-	/* init MQX MIB */
-	MIBMQX_init();
-	/* demo MIB table init */
-	MIBdemo_init();
-
-	/*
-	 ** Initialize the agent.
-	 ** There are two functions for initializing SNMP agent.
-	 ** If application wants to send ColdStart/WarmStart traps at
-	 ** the initialization time, it must call:
-	 ** SNMP_init_with_traps(agent task name, agent task priority,
-	 **                      agent task stack size, list of trap receivers);
-	 **
-	 ** Calling this function will initialize SNMP agent and send
-	 ** ColdStart/WarmStart (depending on system up time) traps to the
-	 ** station(s).
-	 **
-	 ** If application does not want to send ColdStart/WarmStart traps at
-	 ** the initialization time, it must call:
-	 ** SNMP_init(agent task name, agent task priority,
-	 **           agent task stack size);
-	 **
-	 ** Note1: If application wishes to use SNMP_init() to initialize the
-	 **        SNMP agent, there is no IP address for trap to be sent.
-	 **        Application must add trap receivers to the list by calling
-	 **        RTCS_trap_target_add(_ip_address). To remove receiver from
-	 **        trap receivers list call RTCS_trap_target_remove(_ip_address).
-	 **
-	 ** This function initializes SNMP agent without sending any traps.
-	 **
-	 ** This example will use SNMP_init_with_traps.
-	 */
-
-	//error = SNMP_init("SNMP", 7, 3000);
-
-	error = SNMP_init_with_traps("SNMP", 7, 2500, my_trap_list);
-	if (error) {
-		printf("\nFailed to initialize SNMP agent, error = %X", error);
-		_task_block();
-	} /* Endif */
-
-	printf("Demo started, wait... \n\r");
-	/*
-	 ** RTCS/SNMP agent now supports private and public communities.
-	 ** User can add community to the community list, that is defined
-	 ** in snmpcfg.h by adding community string to the SNMPCFG_COMMUNITY_LIST
-	 ** and changing the SNMPCFG_NUM_COMMUNITY respectively.
-	 **
-	 ** Note1: Communities cannot be added dynamically.
-	 ** Note2: RTCS/SNMP agent will respond to get, set and getnext messages
-	 **        to communities defined in SNMPCFG_COMMUNITY_LIST.
-	 **
-	 ** Application can select communities for send and receive traps by calling
-	 ** SNMP_trap_select_community(community name); Where community name should
-	 ** match one of the strings in the SNMPCFG_COMMUNITY_LIST. By default
-	 ** current community is set to first string in SNMPCFG_COMMUNITY_LIST[].
-	 ** This function returns TRUE if the community was changed successfully,
-	 ** FALSE on failure.
-	 **
-	 ** Note3: SNMP_trap_select_community(char_ptr community_name); should be
-	 **        called after SNMP_init (or with trap) has been called.
-	 **
-	 ** Note4: mylinkdown trap is enterprise specific, therefore application
-	 ** need to implement this trap. SNMP_trap_myLinkDown is just an example
-	 ** for use as reference.
-	 */
-
-	/* Send some traps to private and public communities */
-
-	/* trap will be sent to four IPs in my_trap_list */
-	if(SNMP_trap_select_community("private"))
-	{
-		SNMP_trap_linkDown(ihandle);
-		SNMP_trap_linkUp(ihandle);
-		SNMP_trap_myLinkDown(ihandle);
-		SNMP_trap_coldStart();
-		SNMP_trap_warmStart();
-	}
-
-	new_target = ENET_TRAP_ADDR5;
-
-	/* Add a new IP address to the trap list */
-	error = RTCS_trap_target_add(new_target);
-	if (error) {
-		printf("\nFailed to add target trap, error = %X", error);
-	} /* Endif */
-
-	/* trap will be sent to five IPs */
-	if(SNMP_trap_select_community("public"))
-	{
-		SNMP_trap_linkDown(ihandle);
-		SNMP_trap_linkUp(ihandle);
-		SNMP_trap_myLinkDown(ihandle);
-		SNMP_trap_coldStart();
-		SNMP_trap_warmStart();
-	}
-
-	/* Remove the new IP address from trap list */
-	error = RTCS_trap_target_remove(new_target);
-	if (error) {
-		printf("\nFailed to remove target trap, error = %X", error);
-	} /* Endif */
-
-
-#ifdef SNMPCFG_SEND_V2_TRAPS
-	if (SNMP_trap_select_community("public"))
-	{
-		SNMPv2_trap_linkDown(ihandle);
-		SNMPv2_trap_linkUp(ihandle);
-		SNMPv2_trap_coldStart();
-		SNMPv2_trap_warmStart();
-	}
+    /* user stuff come here */
+#if HTTPD_SEPARATE_TASK || !HTTPDCFG_POLL_MODE      
+    _task_create(0, SHELL_TASK, 0);
+    _task_block();
+#else
+    printf("Servers polling started.\n")
+    while (1)
+    {
+        for (i = 0; i < n_devices; i++)
+        {
+            httpd_server_poll(server[i], 1);
+        }
+        /* user stuff come here - only non blocking calls */
+    }
 #endif
-
-	/* Call the counter demo function */
-	Snmp_task(0);
-
-#endif // comment out the SNMP code #if ENABLE_SNMP_SAMPLE_CODE
-
-	
-	_task_block();
-
 }
+
