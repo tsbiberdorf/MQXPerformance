@@ -35,7 +35,7 @@
 
 #include "httpd.h"
 #include "cgi.h"
-#include "httpdsrv.h"
+#include "httpServer.h"
  
 static _mqx_int cgi_ipstat(HTTPD_SESSION_STRUCT *session);
 static _mqx_int cgi_icmpstat(HTTPD_SESSION_STRUCT *session);
