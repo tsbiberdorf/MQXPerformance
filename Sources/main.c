@@ -37,18 +37,34 @@
 #include <rtcs.h>
 #include <ipcfg.h>
 
+#include <select.h>
+#include <shell.h>
+#include <sh_rtcs.h>
+#include <snmpcfg.h>
+#include <snmp.h>
+
+
 #include "httpd.h"
 #include "tfs.h"
 #include "cgi.h"
 #include "enet_wifi.h"
 #include "config.h"
 #include "ioDriver.h"
-
-#include <select.h>
-#include <shell.h>
-#include <sh_rtcs.h>
 #include "shellTask.h"
 #include "adcTask.h"
+
+#include "snmp_demo.h"
+
+#ifdef ENET_DEVICE
+#include <enet.h>
+#endif
+#ifdef PPP_DEVICE
+#include <ppp.h>
+#endif
+#ifndef MQX_DEVICE
+#define MQX_DEVICE BSP_DEFAULT_IO_CHANNEL
+#endif
+
 
 #if DEMOCFG_USE_WIFI
 #include "iwcfg.h"
@@ -59,7 +75,7 @@
 #define DEBUG__MESSAGES         0
 #define SHELL_TASK              2
 #define ADC_TASK              	3
-
+#define SNMP_TASK				4
 
 #ifndef BSP_DEFAULT_IO_CHANNEL_DEFINED
 #error This application requires BSP_DEFAULT_IO_CHANNEL to be not NULL. Please set corresponding BSPCFG_ENABLE_TTYx to non-zero in user_config.h and recompile BSP with this option.
@@ -76,6 +92,18 @@
 #if BSP_ENET_DEVICE_COUNT == 0
 #error No ethernet devices defined!
 #endif
+
+#if ! RTCSCFG_ENABLE_IP4
+#error This application requires RTCSCFG_ENABLE_IP4 defined non-zero in user_config.h. Please recompile BSP with this option.
+#endif
+
+#if ! RTCSCFG_ENABLE_SNMP
+#error This application requires RTCSCFG_ENABLE_SNMP defined non-zero in user_config.h. Please recompile BSP with this option.
+#endif
+
+#if ! MQX_HAS_TIME_SLICE
+#error This application requires MQX_HAS_TIME_SLICE defined non-zero in user_config.h. Please recompile BSP with this option.
+#endif
 /* add SHELL */
 
 /**/
@@ -91,7 +119,8 @@ const TASK_TEMPLATE_STRUCT  MQX_template_list[] =
    /* Task Index,   Function,   Stack,  Priority,   Name,    Attributes,          Param, Time Slice */
     { 1,            main_task,  2500,   8,          "Main",         MQX_AUTO_START_TASK, 0,     0 },
     { SHELL_TASK,   shell_task, 2000,   9,          "Shell_task",   0, 0,     0 },
-	{ ADC_TASK,			ADC_Task,   1000,   7,        "ADC",     0,    0,      0},
+	{ ADC_TASK,		ADC_Task,   1000,   7,        "ADC",     0,    0,      0},
+	{ SNMP_TASK,	SNMP_Task,  2000,   7,        "SNMP",     0,    0,      0},
     { 0 }
 };
 
