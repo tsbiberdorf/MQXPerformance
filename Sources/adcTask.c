@@ -78,7 +78,7 @@ void ADC_Task(uint_32 initial_data)
         if (read(f_ch1, &data, sizeof(data)))
         {
         	adc_value = data.result;
-//            printf("ADC ch 1: %4d \n", data.result);
+            printf("ADC ch 1: %4d \n", data.result);
         }
         else
             printf("               ");

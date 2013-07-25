@@ -39,11 +39,12 @@ _ip_address  my_trap_list[] = {ENET_TRAP_ADDR1, ENET_TRAP_ADDR2,
 		ENET_TRAP_ADDR3, ENET_TRAP_ADDR4,0 };
 
 
-void shell_task(uint_32 datas)
+void SNMP_task(uint_32 datas)
 {
 	_rtcs_if_handle   ihandle;
+	uint_32           error;
+	_ip_address       new_target;
 
-	
 	ihandle = ipcfg_get_ihandle( BSP_DEFAULT_ENET_DEVICE );
 
 	/*
@@ -87,9 +88,11 @@ void shell_task(uint_32 datas)
 	 ** This example will use SNMP_init_with_traps.
 	 */
 
-	//error = SNMP_init("SNMP", 7, 3000);
+//	error = SNMP_init("SNMP", 10, 3000);
 
-	error = SNMP_init_with_traps("SNMP", 7, 2500, my_trap_list);
+//	_task_block();
+
+	error = SNMP_init_with_traps("SNMP", 10, 3000, my_trap_list);
 	if (error) {
 		printf("\nFailed to initialize SNMP agent, error = %X", error);
 		_task_block();

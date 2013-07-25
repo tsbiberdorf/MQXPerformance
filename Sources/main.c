@@ -54,6 +54,7 @@
 #include "adcTask.h"
 
 #include "snmp_demo.h"
+#include "snmpTask.h"
 
 #ifdef ENET_DEVICE
 #include <enet.h>
@@ -117,10 +118,10 @@ void main_task(uint_32 );
 const TASK_TEMPLATE_STRUCT  MQX_template_list[] = 
 {
    /* Task Index,   Function,   Stack,  Priority,   Name,    Attributes,          Param, Time Slice */
-    { 1,            main_task,  2500,   8,          "Main",         MQX_AUTO_START_TASK, 0,     0 },
+    { 1,            main_task,  4000,   8,          "Main",         MQX_AUTO_START_TASK, 0,     0 },
     { SHELL_TASK,   shell_task, 2000,   9,          "Shell_task",   0, 0,     0 },
 	{ ADC_TASK,		ADC_Task,   1000,   7,        "ADC",     0,    0,      0},
-	{ SNMP_TASK,	SNMP_Task,  2000,   7,        "SNMP",     0,    0,      0},
+	{ SNMP_TASK,	SNMP_task,  4000,   6,        "SNMP_task",     0,    0,      0},
     { 0 }
 };
 
@@ -347,6 +348,7 @@ void main_task(uint_32 temp) {
 #if HTTPD_SEPARATE_TASK || !HTTPDCFG_POLL_MODE      
     _task_create(0, SHELL_TASK, 0);
     _task_create(0, ADC_TASK, 0);
+    _task_create(0, SNMP_TASK, 0);
     
     _task_block();
 #else

@@ -9,6 +9,6 @@
 #define SNMPTASK_H_
 
 
-extern void shell_task(uint_32 datas);
+extern void SNMP_task(uint_32 datas);
 
 #endif /* SNMPTASK_H_ */
