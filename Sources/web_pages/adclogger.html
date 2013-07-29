@@ -69,10 +69,6 @@ window.onload=loop;
 	<div class="padMe5"></div>
 	<div class="lcn" style="width: 800px; height: 750px">
 		
-		<h1>
-			<strong>Multi-Channel ADC Datalogger Configuration Page </strong>
-		</h1>
-	
 		<!-- Column Container -->
 		<div class="container"><hr></div>
 		
@@ -88,18 +84,11 @@ window.onload=loop;
 					Sampling Interval (ms):<BR>
 					<input type="text" name="int" maxlength="6" value="100"><BR>
 					<BR>
-					Read from Datafile to DACs:<BR>
-					<input type="checkbox" name="read" value="A">Enabled<BR>
-					<BR>
 					1859 Channel Setting:<BR>
 					<input type="checkbox" name="AA" value="A">Differential 0:1<BR>
 					<input type="checkbox" name="AB" value="B">Differential 2:3<BR>
 					<input type="checkbox" name="AC" value="C">Differential 4:5<BR>
 					<input type="checkbox" name="AD" value="D">Differential 6:7<BR>
-					<input type="checkbox" name="AE" value="E">Differential 1:0<BR>
-					<input type="checkbox" name="AF" value="F">Differential 3:2<BR>
-					<input type="checkbox" name="AG" value="G">Differential 5:4<BR>
-					<input type="checkbox" name="AH" value="H">Differential 7:6<BR>
 					
 					<BR><BR>
 					Span Setting:<BR>
@@ -109,11 +98,6 @@ window.onload=loop;
 					<input type="radio" name=span value=D>Unipolar [0 to 10V]<BR><BR>
 
 					<BR>
-					<BR>
-
-				<h1>Datalogger State:</h1>
-				<DIV id="reading" ><h2><strong>Not Configured</strong></h2></DIV>
-				<BR>
 				<h2>
 				Logfile Name (without .csv suffix):<BR>
 				<input type="text" name="destname" maxlength="20" value="output_log"><BR>
@@ -124,19 +108,6 @@ window.onload=loop;
 				<input type="checkbox" name="BB" value="B">Differential 2:3<BR>
 				<input type="checkbox" name="BC" value="C">Differential 4:5<BR>
 				<input type="checkbox" name="BD" value="D">Differential 6:7<BR>
-				<input type="checkbox" name="BE" value="E">Differential 1:0<BR>
-				<input type="checkbox" name="BF" value="F">Differential 3:2<BR>
-				<input type="checkbox" name="BG" value="G">Differential 5:4<BR>
-				<input type="checkbox" name="BH" value="H">Differential 7:6<BR>
-				<input type="checkbox" name="BI" value="I">Single-Ended 0<BR>
-				<input type="checkbox" name="BJ" value="J">Single-Ended 1<BR>
-				<input type="checkbox" name="BK" value="K">Single-Ended 2<BR>
-				<input type="checkbox" name="BL" value="L">Single-Ended 3<BR>
-				<input type="checkbox" name="BM" value="M">Single-Ended 4<BR>
-				<input type="checkbox" name="BN" value="N">Single-Ended 5<BR>
-				<input type="checkbox" name="BO" value="O">Single-Ended 6<BR>
-				<input type="checkbox" name="BP" value="P">Single-Ended 7<BR>
-
 					<BR>
 					</h2>
 				<INPUT type="submit" value="Set / Read">

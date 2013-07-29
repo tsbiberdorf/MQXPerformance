@@ -68,40 +68,14 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
 			bParams =  TRUE;
 			
 			printf("Destname: %s\n",logname);
-//			sprintf(LTCTWR_Params_Ptr->destname,"c:/%s.csv", logname);
-//			printf("Destination Filename: %s\n", LTCTWR_Params_Ptr->destname);
-			
-			//Are we also sourcing data?
-//			if(httpd_get_varval(session, buffer, "read", temp, sizeof(temp))) 
-//            {
-//            	//If yes, where from?
-//            	httpd_get_varval(session, buffer, "srcname", logname, sizeof(logname));
-//            	sprintf(LTCTWR_Params_Ptr->srcname,"c:/%s.csv", logname);
-//				printf("Source Filename: %s\n", LTCTWR_Params_Ptr->srcname);
-//            }
-//            else
-//            {
-//            	LTCTWR_Params_Ptr->srcname[0] = 0;
-//            }
-			
-			
-//			LTCTWR_Params_Ptr->numsamples = str2int(numsamp);
-//			printf("Number of Samples: %d\n", LTCTWR_Params_Ptr->numsamples);
-//			LTCTWR_Params_Ptr->samplingperiod = str2int(interval);
-//			printf("Sampling Period: %d\n", LTCTWR_Params_Ptr->samplingperiod);
-//			
 			printf("Sample interval:%d\n",str2int(interval) );
             spanindex = (*(char*)span) - mask;//Figure out the Span (1859)
-            printf("1859 Span Index: %d\n", spanindex);
-//
-//            
-//            setindex = (*(char*)setting) - mask;//Figure out the Setting (2498)
-//            printf("2498 Setting Index: %d\n", setindex);
+            printf("Span Index: %d\n", spanindex);
             
             
             //Find the selected channels
             count = 0;
-            for (i = 0; i<16; i++) 
+            for (i = 0; i<4; i++) 
             {
             	channame1859[1] = (char)(i + 0x41);
             	if(httpd_get_varval(session, buffer, channame1859, temp, sizeof(temp))) 
@@ -113,7 +87,7 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
 			
 			
 			count = 0;
-            for (i = 0; i<16; i++) 
+            for (i = 0; i<4; i++) 
             {
             	channame2498[1] = (char)(i + 0x41);
             	if(httpd_get_varval(session, buffer, channame2498, temp, sizeof(temp))) 
