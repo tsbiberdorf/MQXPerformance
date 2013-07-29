@@ -90,7 +90,7 @@ void SNMP_task(uint_32 datas)
 
 //	error = SNMP_init("SNMP", 10, 3000);
 
-//	_task_block();
+	_task_block();
 
 	error = SNMP_init_with_traps("SNMP", 10, 3000, my_trap_list);
 	if (error) {

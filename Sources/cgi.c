@@ -42,10 +42,6 @@ static _mqx_int cgi_icmpstat(HTTPD_SESSION_STRUCT *session);
 static _mqx_int cgi_udpstat(HTTPD_SESSION_STRUCT *session);
 static _mqx_int cgi_tcpstat(HTTPD_SESSION_STRUCT *session);
 static _mqx_int cgi_rtc_data(HTTPD_SESSION_STRUCT *session);
-static _mqx_int cgi_toggle_led1(HTTPD_SESSION_STRUCT *session);
-static _mqx_int cgi_toggle_led2(HTTPD_SESSION_STRUCT *session);
-static _mqx_int cgi_toggle_led3(HTTPD_SESSION_STRUCT *session);
-static _mqx_int cgi_toggle_led4(HTTPD_SESSION_STRUCT *session);
 
 const HTTPD_CGI_LINK_STRUCT cgi_lnk_tbl[] = {
     { "ipstat",         cgi_ipstat},
@@ -57,6 +53,7 @@ const HTTPD_CGI_LINK_STRUCT cgi_lnk_tbl[] = {
 	{ "toggleled2",		cgi_toggle_led2},
 	{ "toggleled3",		cgi_toggle_led3},
 	{ "toggleled4",		cgi_toggle_led4},
+	{ "ledControl",     cgi_ledcontrol_set},
    { 0, 0 }    // DO NOT REMOVE - last item - end of table
 };
 
@@ -271,64 +268,4 @@ static _mqx_int cgi_tcpstat(HTTPD_SESSION_STRUCT *session) {
     return session->request.content_len;
 }
 
-
-static _mqx_int cgi_toggle_led1(HTTPD_SESSION_STRUCT *session)
-{
-	static boolean iLedState = FALSE;
-	if(iLedState)
-	{
-		iLedState = FALSE;
-	}
-	else
-	{
-		iLedState = TRUE;
-	}
-	SetOutput(1, iLedState);
-    return session->request.content_len;
-}
-
-static _mqx_int cgi_toggle_led2(HTTPD_SESSION_STRUCT *session)
-{
-	static boolean iLedState = FALSE;
-	if(iLedState)
-	{
-		iLedState = FALSE;
-	}
-	else
-	{
-		iLedState = TRUE;
-	}
-	SetOutput(2, iLedState);
-    return session->request.content_len;
-}
-
-static _mqx_int cgi_toggle_led3(HTTPD_SESSION_STRUCT *session)
-{
-	static boolean iLedState = FALSE;
-	if(iLedState)
-	{
-		iLedState = FALSE;
-	}
-	else
-	{
-		iLedState = TRUE;
-	}
-	SetOutput(3, iLedState);
-    return session->request.content_len;
-}
-
-static _mqx_int cgi_toggle_led4(HTTPD_SESSION_STRUCT *session)
-{
-	static boolean iLedState = FALSE;
-	if(iLedState)
-	{
-		iLedState = FALSE;
-	}
-	else
-	{
-		iLedState = TRUE;
-	}
-	SetOutput(4, iLedState);
-    return session->request.content_len;
-}
 

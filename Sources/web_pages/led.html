@@ -72,10 +72,21 @@ function toggle_led4() {
  <div class="hrw"><hr></div>
 
   <div class="padMe5"></div>
-<input type=submit name=led value=LED1_TOGGLE onclick="toggle_led1()"><BR><BR>
-<input type=submit name=led value=LED2_TOGGLE onclick="toggle_led2()"><BR><BR>
-<input type=submit name=led value=LED3_TOGGLE onclick="toggle_led3()"><BR><BR>
-<input type=submit name=led value=LED4_TOGGLE onclick="toggle_led4()"><BR><BR>
+	<input type=submit name=led value=LED1_TOGGLE onclick="toggle_led1()"><BR>
+	<input type=submit name=led value=LED2_TOGGLE onclick="toggle_led2()"><BR>
+	<input type=submit name=led value=LED3_TOGGLE onclick="toggle_led3()"><BR>
+	<input type=submit name=led value=LED4_TOGGLE onclick="toggle_led4()"><BR><BR><BR><BR>
+	
+	<form name="LEDControl" action="http:ledControl.cgi" method="POST">
+		<br><br>
+		<input type="text" name="int" maxlength="6" value="100">
+		<br><br>
+		<input type="checkbox" name="LEDA" value="A">LED 1<br>
+		<input type="checkbox" name="LEDB" value="B">LED 2<br>
+		<input type="checkbox" name="LEDC" value="C">LED 3<br>
+		<input type="checkbox" name="LEDD" value="D">LED 4<br>
+		<INPUT type="submit" value="Set / Read">
+		</form>
 
 </div>
 </div>
