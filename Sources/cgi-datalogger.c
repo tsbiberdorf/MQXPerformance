@@ -68,6 +68,7 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
 			
 			bParams =  TRUE;
 			
+			printf("Destname: %s\n",logname);
 //			sprintf(LTCTWR_Params_Ptr->destname,"c:/%s.csv", logname);
 //			printf("Destination Filename: %s\n", LTCTWR_Params_Ptr->destname);
 			
