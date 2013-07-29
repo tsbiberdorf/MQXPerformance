@@ -7,6 +7,8 @@
 </head>
 <body>
 
+<table>
+<tr><td>
 <div id="lfnvcl">
 
 	<ul id="lnv">
@@ -26,41 +28,29 @@
 	</ul>
 </div>
 
-<div id="mncnt" class="cframe">
+	</td>
+	<td>
 
 	<div class="padMe5"></div>
 	<div class="lcn" style="width: 800px; height: 750px">
 		
-		<!-- Column Container -->
-		<div class="container"><hr></div>
-		
 		<form name="adcloggerconfig" action="http:adcloggerset.cgi" method="POST">
 		
-			<!-- First Column -->
-			<div id="col_one">
-			
-				<div class="hrw"><hr></div>
-				<!-- Form for Data -->
-				
-					<h2>
-					Sampling Interval (ms):	<input type="text" name="int" maxlength="6" value="100"><BR>
-					<BR>
-					1859 Channel Setting:<BR>
-					<input type="checkbox" name="AA" value="A">Differential 0:1<BR>
-					<input type="checkbox" name="AB" value="B">Differential 2:3<BR>
-					<input type="checkbox" name="AC" value="C">Differential 4:5<BR>
-					<input type="checkbox" name="AD" value="D">Differential 6:7<BR>
-					
-					<BR><BR>
-					Span Setting:<BR>
-					<input type="radio" name=span value=A>Bipolar [-5V to 5V]<BR>
-					<input type="radio" name=span value=B>Bipolar [-10V to 10V]<BR>
-					<input type="radio" name=span value=C checked>Unipolar [0 to 5V]<BR>
-					<input type="radio" name=span value=D>Unipolar [0 to 10V]<BR><BR>
-
-				<h2>
-				Logfile Name (without .csv suffix):	<input type="text" name="destname" maxlength="20" value="output_log"><BR>
+				Sampling Interval (ms):	<input type="text" name="int" maxlength="6" value="100"><BR>
 				<BR>
+				1859 Channel Setting:<BR>
+				<input type="checkbox" name="AA" value="A">Differential 0:1<BR>
+				<input type="checkbox" name="AB" value="B">Differential 2:3<BR>
+				<input type="checkbox" name="AC" value="C">Differential 4:5<BR>
+				<input type="checkbox" name="AD" value="D">Differential 6:7<BR>
+					
+				Span Setting:<BR>
+				<input type="radio" name=span value=A>Bipolar [-5V to 5V]<BR>
+				<input type="radio" name=span value=B>Bipolar [-10V to 10V]<BR>
+				<input type="radio" name=span value=C checked>Unipolar [0 to 5V]<BR>
+				<input type="radio" name=span value=D>Unipolar [0 to 10V]<BR><BR>
+
+				Logfile Name (without .csv suffix):	<input type="text" name="destname" maxlength="20" value="output_log">
 				
 				2498 Channel Setting:<BR>
 				<input type="checkbox" name="BA" value="A">Differential 0:1<BR>
@@ -68,30 +58,15 @@
 				<input type="checkbox" name="BC" value="C">Differential 4:5<BR>
 				<input type="checkbox" name="BD" value="D">Differential 6:7<BR>
 					<BR>
-					</h2>
 				<INPUT type="submit" value="Set / Read">
 				<BR>
-				
-			</div>
-			
-			<!-- Second Column -->
-			<div id="col_two">
-				
-				
-				</h2>
-			</div> 
-			
-			<br style="clear: both;" /> <!-- Included to force the container to wrap the columns -->
-		</div>
-		<!-- End Column Container -->
-		
 		</form>
 		
 	</div>
+	</div>
 	<!-- End LCN Div -->
-	
-</div>
-<!-- End Main Content -->
 
+</td></tr>
+</table>
 </body>
 </html>		
