@@ -48,7 +48,7 @@ window.onload=loop;
 <div id="lfnvcl">
 
 	<ul id="lnv">
-	<li><h3><a href="../index.html" class="pt">Webserver Home</a></h3></li>
+	<li><h3><a href="index.html" class="pt">Webserver Home</a></h3></li>
 	<li><h3><a href="ipstat.html" class="ar">Network Status...</a></h3>
           <ul>
 	    <li><a href="ipstat.html">IP Stats</a></li>
@@ -60,17 +60,7 @@ window.onload=loop;
         </li>
 	<li><a href="rtc.html">System Run Time (RTC)</a></li>
 	<li><a href="led.html">LED Control</a></li>
-	
-	<li><h3><a href="ltcboard.html">Configuration Pages</a></h3>
-	  <ul>
-		<li><a href="ltc2600.html">LTC2600 DAC</a></li>
-		<li><a href="ltc2704.html">LTC2704 DAC</a></li>
-		<li><a href="ltc2498.html">LTC2498 ADC</a></li>
-		<li><a href="ltc1859.html">LTC1859 ADC</a></li>
-	  </ul>
-	</li>
-	<li><a href="adclogger.html">ADC Datalogger Config</a></li>
-	<li><a href="thermocouple.html">Thermocouple Reader</a></li>
+	<li><a href="adclogger.html">ACD Logger</a></li>
 	</ul>
 </div>
 
@@ -157,10 +147,6 @@ window.onload=loop;
 				<input type="text" name="destname" maxlength="20" value="output_log"><BR>
 				<BR>
 				
-				Datafile Name (without .csv suffix):<BR>
-				<input type="text" name="srcname" maxlength="20" value="source_data"><BR>
-				<BR>
-				
 				2498 Channel Setting:<BR>
 				<input type="checkbox" name="BA" value="A">Differential 0:1<BR>
 				<input type="checkbox" name="BB" value="B">Differential 2:3<BR>
@@ -178,18 +164,6 @@ window.onload=loop;
 				<input type="checkbox" name="BN" value="N">Single-Ended 5<BR>
 				<input type="checkbox" name="BO" value="O">Single-Ended 6<BR>
 				<input type="checkbox" name="BP" value="P">Single-Ended 7<BR>
-				
-				<BR>
-				External Input - Speed and Rejection Setting:<BR>
-				<input type="radio" name=setting value=B checked>Reject 50/60 Hz, x1 speed<BR>
-				<input type="radio" name=setting value=C>Reject 50 Hz, x1 speed<BR>
-				<input type="radio" name=setting value=D>Reject 60 Hz, x1 speed<BR>
-				<input type="radio" name=setting value=E>Reject 50/60 Hz, x2 speed<BR>
-				<input type="radio" name=setting value=F>Reject 50 Hz, x2 speed<BR><BR>
-				Temperature Sensor - Speed and Rejection Setting:<BR>
-				<input type="radio" name=setting value=G>Reject 50/60 Hz, x1 speed<BR>
-				<input type="radio" name=setting value=H>Reject 50 Hz, x1 speed<BR>
-				<input type="radio" name=setting value=I>Reject 60 Hz, x1 speed<BR><BR>
 				
 				</h2>
 			</div> 

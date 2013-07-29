@@ -62,8 +62,9 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
 		if (httpd_get_varval(session, buffer, "int", interval, sizeof(interval)) &&
 			httpd_get_varval(session, buffer, "num", numsamp, sizeof(numsamp)) &&
 			httpd_get_varval(session, buffer, "destname", logname, sizeof(logname)) &&
-			httpd_get_varval(session, buffer, "span", span, sizeof(span)) &&
-			httpd_get_varval(session, buffer, "setting", setting, sizeof(setting))) {
+			httpd_get_varval(session, buffer, "span", span, sizeof(span))
+			) 
+		{
 			
 			bParams =  TRUE;
 			
