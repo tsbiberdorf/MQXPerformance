@@ -91,6 +91,7 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
 //			LTCTWR_Params_Ptr->samplingperiod = str2int(interval);
 //			printf("Sampling Period: %d\n", LTCTWR_Params_Ptr->samplingperiod);
 //			
+			printf("Sample interval:%d",str2int(interval) );
             spanindex = (*(char*)span) - mask;//Figure out the Span (1859)
             printf("1859 Span Index: %d\n", spanindex);
 //
