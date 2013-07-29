@@ -54,6 +54,8 @@ const HTTPD_CGI_LINK_STRUCT cgi_lnk_tbl[] = {
 	{ "toggleled3",		cgi_toggle_led3},
 	{ "toggleled4",		cgi_toggle_led4},
 	{ "ledControl",     cgi_ledcontrol_set},
+	//Datalogger
+	{ "adcloggerset",     cgi_adcdatalogger_set},
    { 0, 0 }    // DO NOT REMOVE - last item - end of table
 };
 
@@ -268,4 +270,19 @@ static _mqx_int cgi_tcpstat(HTTPD_SESSION_STRUCT *session) {
     return session->request.content_len;
 }
 
+
+uint_32 str2int(char_ptr string) 
+{
+   int_8 i;
+   uint_8 len, mask = 0x30;
+   uint_32 pow[] = { 1, 10, 100, 1000, 10000, 100000, 1000000};
+   uint_32 result = 0;
+   
+   len = strlen(string);
+   for(i=0; i<len; i++) 
+   {
+   	  result += (((char*)string)[i] & ~mask)*pow[strlen(string)-1-i];
+   }
+   return result;
+}
 

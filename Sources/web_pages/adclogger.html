@@ -1,0 +1,217 @@
+<!DOCTYPE HTML SYSTEM>
+<html>
+<head>
+<title>TWR-ADCDAC-LTC Demo Suite</title>
+<style type="text/css">
+<!--
+@import"mqx.css";
+-->
+</style>
+
+<script src="request.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+if (window.attachEvent) {
+	window.attachEvent("onload", sfHover2);
+}
+</script>
+
+<!-- Form for Data -->
+<script type="text/javascript">
+var 	volt_value 	= new Array(3);
+var	data_received   = 0;
+
+function parse_vars(data) {
+	var parsed = data.split( "\n" );
+
+	
+	volt_value[0] 		= parsed[0];
+	reading.innerHTML 	=   "<h2>"+volt_value[0]+"<strong> Samples Taken</strong></h2> ";
+}
+
+function loop() {
+	if (!data_received)
+		makeRequest("samplerprogress.cgi");
+	setTimeout("loop()", 1000);
+}
+
+window.onload=loop;
+
+</script>
+
+
+</head>
+<body>
+
+<a href="http://www.freescale.com" title="Freescale"><img src="header.gif" alt="Freescale Semiconductor" width="990" height="50" border="0" ></a>
+
+<div id="lfnvcl">
+
+	<ul id="lnv">
+	<li><h3><a href="../index.html" class="pt">Webserver Home</a></h3></li>
+	<li><h3><a href="ipstat.html" class="ar">Network Status...</a></h3>
+          <ul>
+	    <li><a href="ipstat.html">IP Stats</a></li>
+	    <li><a href="icmpstat.html">ICMP Stats</a></li>
+	    <li><a href="udpstat.html">UDP Stats</a></li>
+	    <li><a href="tcpstat.html">TCP Stats</a></li>
+
+          </ul>
+        </li>
+	<li><a href="rtc.html">System Run Time (RTC)</a></li>
+	<li><a href="led.html">LED Control</a></li>
+	
+	<li><h3><a href="ltcboard.html">Configuration Pages</a></h3>
+	  <ul>
+		<li><a href="ltc2600.html">LTC2600 DAC</a></li>
+		<li><a href="ltc2704.html">LTC2704 DAC</a></li>
+		<li><a href="ltc2498.html">LTC2498 ADC</a></li>
+		<li><a href="ltc1859.html">LTC1859 ADC</a></li>
+	  </ul>
+	</li>
+	<li><a href="adclogger.html">ADC Datalogger Config</a></li>
+	<li><a href="thermocouple.html">Thermocouple Reader</a></li>
+	</ul>
+</div>
+
+<div id="mncnt" class="cframe">
+
+	<div class="padMe5"></div>
+	<div class="lcn" style="width: 800px; height: 750px">
+		
+		<h1>
+			<strong>Multi-Channel ADC Datalogger Configuration Page </strong>
+		</h1>
+	
+		<div class="hrw"><hr></div>
+		<p>This is the page to configure the LTC 1859 and LTC 2498 ADCs for data logging<br></p>
+		<p>The system will sample all the selected channels every [sampleinterval] milliseconds.<br>
+		ADCs that are too slow to maintain the sampling rate will wait until the next sample clock tick.<br>
+		The system will stop after [numsamples] samples have been taken per (fastest) channel.<br>
+		This data will be written to a .csv file with name [logfilename] on the USB flash drive.</p>
+		<p>There is also the ability to write to the DACs after each round of samples using the Data File.</p>
+		<p>How to write the Data File: <a href="writeCSVfiles.jpg">Data File Example</a></p>
+		<div class="padMe5"></div>
+		
+		<!-- Column Container -->
+		<div class="container"><hr></div>
+		
+		<form name="adcloggerconfig" action="http:adcloggerset.cgi" method="POST">
+		
+			<!-- First Column -->
+			<div id="col_one">
+			
+				<div class="hrw"><hr></div>
+				<!-- Form for Data -->
+				
+					<h2>
+					Sampling Interval (ms):<BR>
+					<input type="text" name="int" maxlength="6" value="100"><BR>
+					<BR>
+					Number of Samples (per channel):<BR>
+					<input type="text" name="num" maxlength="6" value="20"><BR>
+					<BR>
+					Read from Datafile to DACs:<BR>
+					<input type="checkbox" name="read" value="A">Enabled<BR>
+					<BR>
+					1859 Channel Setting:<BR>
+					<input type="checkbox" name="AA" value="A">Differential 0:1<BR>
+					<input type="checkbox" name="AB" value="B">Differential 2:3<BR>
+					<input type="checkbox" name="AC" value="C">Differential 4:5<BR>
+					<input type="checkbox" name="AD" value="D">Differential 6:7<BR>
+					<input type="checkbox" name="AE" value="E">Differential 1:0<BR>
+					<input type="checkbox" name="AF" value="F">Differential 3:2<BR>
+					<input type="checkbox" name="AG" value="G">Differential 5:4<BR>
+					<input type="checkbox" name="AH" value="H">Differential 7:6<BR>
+					
+					<input type="checkbox" name="AI" value="I">Single-Ended 0<BR>
+					<input type="checkbox" name="AJ" value="J">Single-Ended 1<BR>
+					<input type="checkbox" name="AK" value="K">Single-Ended 2<BR>
+					<input type="checkbox" name="AL" value="L">Single-Ended 3<BR>
+					<input type="checkbox" name="AM" value="M">Single-Ended 4<BR>
+					<input type="checkbox" name="AN" value="N">Single-Ended 5<BR>
+					<input type="checkbox" name="AO" value="O">Single-Ended 6<BR>
+					<input type="checkbox" name="AP" value="P">Single-Ended 7<BR>
+					
+					<BR><BR>
+					Span Setting:<BR>
+					<input type="radio" name=span value=A>Bipolar [-5V to 5V]<BR>
+					<input type="radio" name=span value=B>Bipolar [-10V to 10V]<BR>
+					<input type="radio" name=span value=C checked>Unipolar [0 to 5V]<BR>
+					<input type="radio" name=span value=D>Unipolar [0 to 10V]<BR><BR>
+					<BR>
+					</h2>
+				<INPUT type="submit" value="Set / Read">
+				<BR>
+				
+			</div>
+			
+			<!-- Second Column -->
+			<div id="col_two">
+				
+				<h1>Datalogger State:</h1>
+				<DIV id="reading" ><h2><strong>Not Configured</strong></h2></DIV>
+				<BR>
+				<h2>
+				Logfile Name (without .csv suffix):<BR>
+				<input type="text" name="destname" maxlength="20" value="output_log"><BR>
+				<BR>
+				
+				Datafile Name (without .csv suffix):<BR>
+				<input type="text" name="srcname" maxlength="20" value="source_data"><BR>
+				<BR>
+				
+				2498 Channel Setting:<BR>
+				<input type="checkbox" name="BA" value="A">Differential 0:1<BR>
+				<input type="checkbox" name="BB" value="B">Differential 2:3<BR>
+				<input type="checkbox" name="BC" value="C">Differential 4:5<BR>
+				<input type="checkbox" name="BD" value="D">Differential 6:7<BR>
+				<input type="checkbox" name="BE" value="E">Differential 1:0<BR>
+				<input type="checkbox" name="BF" value="F">Differential 3:2<BR>
+				<input type="checkbox" name="BG" value="G">Differential 5:4<BR>
+				<input type="checkbox" name="BH" value="H">Differential 7:6<BR>
+				<input type="checkbox" name="BI" value="I">Single-Ended 0<BR>
+				<input type="checkbox" name="BJ" value="J">Single-Ended 1<BR>
+				<input type="checkbox" name="BK" value="K">Single-Ended 2<BR>
+				<input type="checkbox" name="BL" value="L">Single-Ended 3<BR>
+				<input type="checkbox" name="BM" value="M">Single-Ended 4<BR>
+				<input type="checkbox" name="BN" value="N">Single-Ended 5<BR>
+				<input type="checkbox" name="BO" value="O">Single-Ended 6<BR>
+				<input type="checkbox" name="BP" value="P">Single-Ended 7<BR>
+				
+				<BR>
+				External Input - Speed and Rejection Setting:<BR>
+				<input type="radio" name=setting value=B checked>Reject 50/60 Hz, x1 speed<BR>
+				<input type="radio" name=setting value=C>Reject 50 Hz, x1 speed<BR>
+				<input type="radio" name=setting value=D>Reject 60 Hz, x1 speed<BR>
+				<input type="radio" name=setting value=E>Reject 50/60 Hz, x2 speed<BR>
+				<input type="radio" name=setting value=F>Reject 50 Hz, x2 speed<BR><BR>
+				Temperature Sensor - Speed and Rejection Setting:<BR>
+				<input type="radio" name=setting value=G>Reject 50/60 Hz, x1 speed<BR>
+				<input type="radio" name=setting value=H>Reject 50 Hz, x1 speed<BR>
+				<input type="radio" name=setting value=I>Reject 60 Hz, x1 speed<BR><BR>
+				
+				</h2>
+			</div> 
+			
+			<br style="clear: both;" /> <!-- Included to force the container to wrap the columns -->
+		</div>
+		<!-- End Column Container -->
+		
+		</form>
+		
+	</div>
+	<!-- End LCN Div -->
+	
+</div>
+<!-- End Main Content -->
+
+<div id="ftr">
+	<div id=copyright>
+		<center>&copy; Freescale Semiconductor, Inc. 2004 - 2008. All Rights Reserved </center>
+		<center>&copy; Linear Technology Corporation. 1981 - 2010. All Rights Reserved</center>
+	</div>	
+</div>
+
+</body>
+</html>		

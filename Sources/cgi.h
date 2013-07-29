@@ -48,12 +48,16 @@
     httpd_sendstr(session->sock, "\n");             \
 }
 
+
+uint_32 str2int(char_ptr string) ;
+
 /* Interfaces to LED operation */
 _mqx_int cgi_toggle_led1(HTTPD_SESSION_STRUCT *session);
 _mqx_int cgi_toggle_led2(HTTPD_SESSION_STRUCT *session);
 _mqx_int cgi_toggle_led3(HTTPD_SESSION_STRUCT *session);
 _mqx_int cgi_toggle_led4(HTTPD_SESSION_STRUCT *session);
 _mqx_int cgi_ledcontrol_set(HTTPD_SESSION_STRUCT *session);
+_mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session) ;
 
 
 #endif

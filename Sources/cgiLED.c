@@ -71,21 +71,6 @@ _mqx_int cgi_toggle_led4(HTTPD_SESSION_STRUCT *session)
 }
 
 
-uint_32 str2int(char_ptr string) 
-{
-   int_8 i;
-   uint_8 len, mask = 0x30;
-   uint_32 pow[] = { 1, 10, 100, 1000, 10000, 100000, 1000000};
-   uint_32 result = 0;
-   
-   len = strlen(string);
-   for(i=0; i<len; i++) 
-   {
-   	  result += (((char*)string)[i] & ~mask)*pow[strlen(string)-1-i];
-   }
-   return result;
-}
-
 
 _mqx_int cgi_ledcontrol_set(HTTPD_SESSION_STRUCT *session)
 {
