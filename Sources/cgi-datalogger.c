@@ -60,7 +60,6 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
     	
     	//Check if all contents (except channel) are present
 		if (httpd_get_varval(session, buffer, "int", interval, sizeof(interval)) &&
-			httpd_get_varval(session, buffer, "num", numsamp, sizeof(numsamp)) &&
 			httpd_get_varval(session, buffer, "destname", logname, sizeof(logname)) &&
 			httpd_get_varval(session, buffer, "span", span, sizeof(span))
 			) 
@@ -91,7 +90,7 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
 //			LTCTWR_Params_Ptr->samplingperiod = str2int(interval);
 //			printf("Sampling Period: %d\n", LTCTWR_Params_Ptr->samplingperiod);
 //			
-			printf("Sample interval:%d",str2int(interval) );
+			printf("Sample interval:%d\n",str2int(interval) );
             spanindex = (*(char*)span) - mask;//Figure out the Span (1859)
             printf("1859 Span Index: %d\n", spanindex);
 //
