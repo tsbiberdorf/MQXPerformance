@@ -24,34 +24,33 @@
 	<li><a href="led.html">LED Control</a></li>
 
 	</ul>
-</div>
+</div> <!-- div id="lfnvcl" -->
 
- <div id="mncnt" class="cframe">
+	<div class="led" style="width: 800px; height: 750px">
+		
+		<form name="ledcontrolconfig" action="http:ledControl.cgi" method="POST">
+		
+				Sampling Interval (ms):	<input type="text" name="int" maxlength="6" value="100"><BR>
+				<BR>
+				LED Selection:<BR>
+				<input type="checkbox" name="AA" value="A">LED 1<BR>
+				<input type="checkbox" name="AB" value="B">LED 2<BR>
+				<input type="checkbox" name="AC" value="C">LED 3<BR>
+				<input type="checkbox" name="AD" value="D">LED 4<BR><BR>
+					
+				Span Setting:<BR>
+				<input type="radio" name=span value=A>Bipolar [-5V to 5V]<BR>
+				<input type="radio" name=span value=B>Bipolar [-10V to 10V]<BR>
+				<input type="radio" name=span value=C checked>Unipolar [0 to 5V]<BR>
+				<input type="radio" name=span value=D>Unipolar [0 to 10V]<BR><BR>
 
-  <div class="padMe5"></div>
-  <div class="lcn" style="width: 594px; height: 269px">
-
-   <div class="hrw"><hr></div>
-   <h1>
-    <strong>LED Control </strong>
-    </h1>
-
- <div class="hrw"><hr></div>
-
-  <div class="padMe5"></div>
-	
-	<form name="LEDControl" action="http:ledControl.cgi" method="POST">
-		<br><br>
-		<input type="text" name="int" maxlength="6" value="100">
-		<br><br>
-		<input type="checkbox" name="LEDA" value="A">LED 1<br>
-		<input type="checkbox" name="LEDB" value="B">LED 2<br>
-		<input type="checkbox" name="LEDC" value="C">LED 3<br>
-		<input type="checkbox" name="LEDD" value="D">LED 4<br>
-		<INPUT type="submit" value="Set / Read">
+				Test Input box:	<input type="text" name="destname" maxlength="20" value="output_log"><BR><BR>
+					<BR>
+				<INPUT type="submit" value="Set / Read">
+				<BR>
 		</form>
+		
+	</div> <!-- div class="led" -->
 
-</div>
-</div>
 </body>
 </html>		
