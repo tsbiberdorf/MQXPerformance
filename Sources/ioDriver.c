@@ -58,19 +58,19 @@ void SetOutput(int signal, boolean state)
 { 
 	switch (signal) 
 	{ 
-	case 1: 
+	case 0x01: 
 		lwgpio_set_pin_output(BSP_LED1, (state) ? 
 				LWGPIO_VALUE_LOW : LWGPIO_VALUE_HIGH); 
 		break; 
-	case 2: 
+	case 0x02: 
 		lwgpio_set_pin_output(BSP_LED2, (state) ? 
 				LWGPIO_VALUE_LOW : LWGPIO_VALUE_HIGH); 
 		break; 
-	case 3: 
+	case 0x04: 
 		lwgpio_set_pin_output(BSP_LED3, (state) ? 
 				LWGPIO_VALUE_LOW : LWGPIO_VALUE_HIGH); 
 		break; 
-	case 4: 
+	case 0x08: 
 		lwgpio_set_pin_output(BSP_LED4, (state) ? 
 				LWGPIO_VALUE_LOW : LWGPIO_VALUE_HIGH); 
 		break; 

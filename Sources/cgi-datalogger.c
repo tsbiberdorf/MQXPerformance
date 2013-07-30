@@ -25,10 +25,11 @@ extern uint_32 samplerprogresscount;
 _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session) 
 {
 	uint_32  len = 0;
-	char     span[2], setting[2], temp[2], interval[10], numsamp[10], logname[16];
+	char span[2], setting[2], temp[2], interval[10], numsamp[10], logname[16];
+	uint_32 iLedState;
 	
-	char     channame1859[3] = "A0";
-	char     channame2498[3] = "B0";
+	char ledSelection[3] = "A0";
+	char channame2498[3] = "B0";
     uint_8  i;
     
 	
@@ -75,15 +76,35 @@ _mqx_int cgi_adcdatalogger_set(HTTPD_SESSION_STRUCT *session)
             
             //Find the selected channels
             count = 0;
+            iLedState = 0;
             for (i = 0; i<4; i++) 
             {
-            	channame1859[1] = (char)(i + 0x41);
-            	if(httpd_get_varval(session, buffer, channame1859, temp, sizeof(temp))) 
+            	ledSelection[1] = (char)(i + 0x41);
+            	if(httpd_get_varval(session, buffer, ledSelection, temp, sizeof(temp))) 
 	            {
-	            	printf("%s selected\n", channame1859);
-	            	count ++;
+            		switch(ledSelection[1])
+            		{
+            		case 'A':
+            			iLedState |= 0x01;
+            			break;
+            		case 'B':
+            			iLedState |= 0x02;
+            			break;
+            		case 'C':
+            			iLedState |= 0x04;
+            			break;
+            		case 'D':
+            			iLedState |= 0x08;
+            			break;
+            		}
+	            	printf("%s selected\n", ledSelection);
 	            }
             }
+            for (i = 0; i<4; i++) 
+            {
+            	SetOutput((1<<i), iLedState & (1<<i) );
+            }
+
 			
 			
 			count = 0;
